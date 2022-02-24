@@ -2,10 +2,12 @@ import React, {useEffect, useState} from "react";
 import GoogleMapReact from 'google-map-react';
 import axios from 'axios';
 import lodash from 'lodash';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, Navigate } from 'react-router-dom';
 
-function Airport() {
+function Airport(props) {
     let params = useParams();
+    let isSignedIn = props.isSignedIn;
+    let [isLoading, setLoadingStatus] = useState(true);
     let [icao_code, set_icao_code] = useState(params.airport);
     let [airportName, setAirportName] = useState(null);
     let [airportLocation, setAirportLocation] = useState(null);
@@ -34,25 +36,34 @@ function Airport() {
 
     return (
         <main>
-            {lodash.isEmpty(icao_code) ? (
-                <h1>That airport does not exist!</h1>
+            {isLoading ? (
+                <h1>Insert Spinner Here</h1>
             ) : (
             <div>
-                <div>
-                <h1>{icao_code}</h1>
-                </div>
-                <div>
-                <h2>{airportName}</h2>
-                <h2>{airportLocation}</h2>
-                </div>
-                <div style={{ height: '50vh', width: '50%' }}>
-                    <GoogleMapReact
-                        bootstrapURLKeys={{key: "AIzaSyDt9vPcQ0Lz7XfQKUr6UgtgXMD83-tjw0Y"}}
-                        center={map.center}
-                        zoom={map.zoom}
-                    >
-                    </GoogleMapReact>
-                </div>
+                {isSignedIn ? (
+                    <div>
+                        {lodash.isEmpty(icao_code) ? (
+                            <div>
+                                <div>
+                                    <h1>{icao_code}</h1>
+                                </div>
+                                <div>
+                                    <h2>{airportName}</h2>
+                                    <h2>{airportLocation}</h2>
+                                </div>
+                                <div style={{ height: '50vh', width: '50%' }}>
+                                    <GoogleMapReact bootstrapURLKeys={{key: "AIzaSyDt9vPcQ0Lz7XfQKUr6UgtgXMD83-tjw0Y"}}
+                                        center={map.center} zoom={map.zoom}>
+                                    </GoogleMapReact>
+                                </div>
+                            </div>
+                        ) : (
+                            <h1>That airport does not exist!</h1>
+                        )}
+                    </div>
+                ) : (
+                    <Navigate to="/login" />
+                )}
             </div>
             )}
         </main>
