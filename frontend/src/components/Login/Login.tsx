@@ -1,12 +1,13 @@
-import React, {Children, useState} from "react";
-import { Link, NavLink } from "react-router-dom";
-import env from "react-dotenv";
-import {GoogleLogin, GoogleLogout } from "react-google-login";
-import Home from "../Home/Home";
-function Login(props) {
+import React, { useState} from "react";
+import { Navigate } from "react-router-dom";
+import {GoogleLogin, } from "react-google-login";
+import env from "dotenv";
+
+const clientId = process.env.googleClientID;
+
+function Login() {
     const [showLoginButton, setLoginButton] = useState(true);
     const [showLogoutButton, setLogoutButton] = useState(false);
-    const clientId = "817352508433-svhmh1kd4bg80l1jb10g9kq91qkvslv6.apps.googleusercontent.com";
 
     const onLoginSuccess = (res) => {
         setLoginButton(false);
@@ -17,17 +18,6 @@ function Login(props) {
         console.log(res);
         setLogoutButton(true);
         setLogoutButton(false);
-    };
-
-    const onSignoutSuccess = () => {
-        alert("You have been logout of your Google Account!");
-        setLoginButton(true);
-        setLogoutButton(false);
-    };
-
-    const redirectAfterLogin = () => {
-        console.log("Hello!");
-        window.location.reload();
     };
 
     return (
@@ -42,7 +32,7 @@ function Login(props) {
                     isSignedIn={true}
                     />
             ) : (
-                <NavLink to="/" onClick={redirectAfterLogin}>Please go to the home page</NavLink>
+                <Navigate to="/" />
             )}
         </div>
     );
