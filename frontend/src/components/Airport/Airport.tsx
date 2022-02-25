@@ -3,6 +3,7 @@ import GoogleMapReact from 'google-map-react';
 import axios from 'axios';
 import lodash from 'lodash';
 import { useParams, Link, Navigate } from 'react-router-dom';
+import "../../spinner.css";
 
 function Airport(props) {
     let params = useParams();
@@ -31,18 +32,23 @@ function Airport(props) {
             setAirportLocation(res.data.station.location);
             setAirportLongitude(res.data.station.geometry.coordinates[0]);
             setAirportLatitude(res.data.station.geometry.coordinates[1]);
+            setTimeout(function() {
+                setLoadingStatus(false);
+            }, 750)
         }).catch((err) => { console.log(err); });
     });
 
     return (
         <main>
             {isLoading ? (
-                <h1>Insert Spinner Here</h1>
+                    <div className="lds-ring">
+                    <div></div><div></div><div></div><div></div>
+                    </div>
             ) : (
             <div>
                 {isSignedIn ? (
                     <div>
-                        {lodash.isEmpty(icao_code) ? (
+                        {!lodash.isEmpty(icao_code) ? (
                             <div>
                                 <div>
                                     <h1>{icao_code}</h1>

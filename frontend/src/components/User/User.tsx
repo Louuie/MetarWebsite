@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import "../../spinner.css";
 import { Navigate } from "react-router-dom";
 
 
@@ -16,7 +17,9 @@ function User(props) {
     return (
     <div>
         {isLoading ? (
-            <h1>Insert Spinner Here</h1>
+                <div className="lds-ring">
+                <div></div><div></div><div></div><div></div>
+                </div>
         ) : (
             <div>
                 {isSignedIn ? (

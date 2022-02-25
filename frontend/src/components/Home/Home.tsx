@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react"; 
 import { Navigate } from "react-router-dom";
+import "../../spinner.css";
 
 const handleLocationSubmission = (e) => {
     e.preventDefault();
@@ -20,7 +21,9 @@ function Home(props) {
     return (
     <div>
         {isLoading ? (
-            <h1>Insert Spinner Here</h1>
+            <div className="lds-ring">
+            <div></div><div></div><div></div><div></div>
+            </div>
         ) : (
             <div>
                 <div>

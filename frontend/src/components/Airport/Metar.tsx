@@ -3,6 +3,7 @@ import axios from 'axios';
 import lodash from 'lodash';
 import { useParams, Link, Navigate } from 'react-router-dom';
 import './Metar.css';
+import "../../spinner.css";
 
 function Metar(props) {
     let params = useParams();
@@ -56,7 +57,9 @@ function Metar(props) {
         <>
           <main>
               {isLoading ? (
-                  <h1>Insert Spinner Here</h1>
+                    <div className="lds-ring">
+                    <div></div><div></div><div></div><div></div>
+                    </div>
               ) : (
                 <div>
                     {!isSignedIn ? (
