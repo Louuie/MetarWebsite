@@ -18,6 +18,8 @@ function Metar(props) {
     let [flight_category, set_flight_category] = useState(null);
     let [wind_direction, set_wind_direction] = useState(null);
     let [wind_speed, set_wind_speed] = useState(null);
+    let [clouds, setClouds] = useState(null);
+    let [altimeter, setAltimeter] = useState(null);
 
     let isSignedIn = props.isSignedIn; 
 
@@ -42,6 +44,7 @@ function Metar(props) {
             set_wind_direction(padded_wind_direction.padStart(3, '0'));
         }
         set_wind_speed(data.wind.speed_kts);
+        setClouds(data.clouds[0].text);
         setTimeout(
             function() {
                 setLoadingStatus(false);
@@ -112,6 +115,16 @@ function Metar(props) {
                                                             {airport_temperature_in_celsius}° C /
                                                             {airport_temperature_in_fahrenheit}° F
                                                         </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Clouds</th>
+                                                        <td>
+                                                            {clouds}
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Alitmeter</th>
+                                                        <td>{}</td>
                                                     </tr>
                                                 </tbody>
                                             </table>

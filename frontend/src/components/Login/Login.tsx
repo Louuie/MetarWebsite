@@ -1,9 +1,9 @@
-import React, { useState} from "react";
-import { Navigate } from "react-router-dom";
+import React, { useEffect, useState} from "react";
+import { Link, Navigate } from "react-router-dom";
 import {GoogleLogin, } from "react-google-login";
 import env from "dotenv";
 
-const clientId = process.env.googleClientID;
+const clientId = "817352508433-svhmh1kd4bg80l1jb10g9kq91qkvslv6.apps.googleusercontent.com";
 
 function Login() {
     const [showLoginButton, setLoginButton] = useState(true);
@@ -20,6 +20,7 @@ function Login() {
         setLogoutButton(false);
     };
 
+
     return (
         <div>
             {showLoginButton ? (
@@ -32,7 +33,7 @@ function Login() {
                     isSignedIn={true}
                     />
             ) : (
-                <Navigate to="/" />
+                <Link to="/"></Link>
             )}
         </div>
     );

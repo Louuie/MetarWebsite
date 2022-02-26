@@ -13,10 +13,16 @@ function Home(props) {
     let [isLoading, setLoadingStatus] = useState(true);
 
     useEffect(() => {
+        let isCanceled = false;
+        if(!isCanceled) {
         setTimeout(
             function() {
                 setLoadingStatus(false);
             }, 750)
+        }
+        return () => {
+            isCanceled = true;
+        };
     });
     return (
     <div>
