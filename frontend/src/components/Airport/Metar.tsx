@@ -3,7 +3,6 @@ import axios from 'axios';
 import lodash from 'lodash';
 import { useParams, Link, Navigate } from 'react-router-dom';
 import './Metar.css';
-import "../../spinner.css";
 
 function Metar(props) {
     let params = useParams();
@@ -18,6 +17,7 @@ function Metar(props) {
     let [flight_category, set_flight_category] = useState(null);
     let [wind_direction, set_wind_direction] = useState(null);
     let [wind_speed, set_wind_speed] = useState(null);
+    let [windExists, setWindExists] = useState(null);
     let [clouds, setClouds] = useState(null);
     let [altimeter, setAltimeter] = useState(null);
 
@@ -39,11 +39,14 @@ function Metar(props) {
                 set_airport_temperature_in_celsius(data.temperature.celsius); 
                 set_airport_temperature_in_fahrenheit(data.temperature.fahrenheit); 
             }
-        if(data.wind.degrees >= 100) { set_wind_direction(data.wind.degrees); } else {
-            padded_wind_direction = data.wind.degrees.toString();
-            set_wind_direction(padded_wind_direction.padStart(3, '0'));
+        if(data.wind === undefined) { setWindExists(false); } else {
+            setWindExists(true);
+            if(data.wind.degrees >= 100) { set_wind_direction(data.wind.degrees); } else {
+                padded_wind_direction = data.wind.degrees.toString();
+                set_wind_direction(padded_wind_direction.padStart(3, '0'));
+            }
+            set_wind_speed(data.wind.speed_kts);
         }
-        set_wind_speed(data.wind.speed_kts);
         setClouds(data.clouds[0].text);
         setTimeout(
             function() {
@@ -73,63 +76,123 @@ function Metar(props) {
                                 <h1>That airport does not exist!</h1>
                             ) : (
                                 <div>
-                                    <div>
-                                        <Link to={`/${icao_code}`}>{icao_code} </Link> <br></br>
-                                        <Link to={`/metar/${icao_code}`} onClick={(()=> window.location.reload())}>Metar
-                                        </Link>
-                                    </div>
-                                    <h1>{icao_code}</h1>
-                                    <div>
-                                        <h2>{airportName}</h2>
-                                        <h3>{airportLocation}</h3>
-                                    </div>
-                                    <div>
-                                        <div className="metarTitle">
-                                            <h3>METAR - Current</h3>
+                                    {!windExists ? (
+                                        <div>
+                                            <div>
+                                                <Link to={`/${icao_code}`}>{icao_code} </Link> <br></br>
+                                                <Link to={`/metar/${icao_code}`} onClick={(()=>
+                                                window.location.reload())}>Metar
+                                                </Link>
+                                            </div>
+                                            <h1>{icao_code}</h1>
+                                            <div>
+                                                <h2>{airportName}</h2>
+                                                <h3>{airportLocation}</h3>
+                                            </div>
+                                            <div>
+                                                <div className="metarTitle">
+                                                    <h3>METAR - Current</h3>
+                                                </div>
+                                                <div className="metarTable">
+                                                    <table className="table">
+                                                        <tbody>
+                                                            <tr>
+                                                                <th colSpan={2}>
+                                                                    <p>{airport_raw_text}</p>
+                                                                </th>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>Flight Category</th>
+                                                                <td>
+                                                                    <span className="badge text-white">
+                                                                        {flight_category}
+                                                                    </span>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>Temperature</th>
+                                                                <td>
+                                                                    {airport_temperature_in_celsius}° C /
+                                                                    {airport_temperature_in_fahrenheit}° F
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>Clouds</th>
+                                                                <td>
+                                                                    {clouds}
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>Alitmeter</th>
+                                                                <td>{}</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div className="metarTable">
-                                            <table className="table">
-                                                <tbody>
-                                                    <tr>
-                                                        <th colSpan={2}>
-                                                            <p>{airport_raw_text}</p>
-                                                        </th>
-                                                    </tr>
-                                                    <tr>
-                                                        <th>Flight Category</th>
-                                                        <td>
-                                                            <span className="badge text-white">
-                                                                {flight_category}
-                                                            </span>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th>Wind</th>
-                                                        <td>
-                                                            {wind_direction}° at {wind_speed} KTS
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th>Temperature</th>
-                                                        <td>
-                                                            {airport_temperature_in_celsius}° C /
-                                                            {airport_temperature_in_fahrenheit}° F
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th>Clouds</th>
-                                                        <td>
-                                                            {clouds}
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th>Alitmeter</th>
-                                                        <td>{}</td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
+                                    ) : (
+                                        <div>
+                                            <div>
+                                                <Link to={`/${icao_code}`}>{icao_code} </Link> <br></br>
+                                                <Link to={`/metar/${icao_code}`} onClick={(()=>
+                                                window.location.reload())}>Metar
+                                                </Link>
+                                            </div>
+                                            <h1>{icao_code}</h1>
+                                            <div>
+                                                <h2>{airportName}</h2>
+                                                <h3>{airportLocation}</h3>
+                                            </div>
+                                            <div>
+                                                <div className="metarTitle">
+                                                    <h3>METAR - Current</h3>
+                                                </div>
+                                                <div className="metarTable">
+                                                    <table className="table">
+                                                        <tbody>
+                                                            <tr>
+                                                                <th colSpan={2}>
+                                                                    <p>{airport_raw_text}</p>
+                                                                </th>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>Flight Category</th>
+                                                                <td>
+                                                                    <span className="badge text-white">
+                                                                        {flight_category}
+                                                                    </span>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>Wind</th>
+                                                                <td>
+                                                                    {wind_direction}° at {wind_speed} KTS
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>Temperature</th>
+                                                                <td>
+                                                                    {airport_temperature_in_celsius}° C /
+                                                                    {airport_temperature_in_fahrenheit}° F
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>Clouds</th>
+                                                                <td>
+                                                                    {clouds}
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>Alitmeter</th>
+                                                                <td>{}</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
+                                    )}
                                 </div>
                             )}
                         </div>

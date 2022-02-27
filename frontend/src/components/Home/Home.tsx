@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react"; 
 import { Navigate } from "react-router-dom";
-import "../../spinner.css";
 
 const handleLocationSubmission = (e) => {
     e.preventDefault();

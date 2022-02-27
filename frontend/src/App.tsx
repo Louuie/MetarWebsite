@@ -8,46 +8,20 @@ import {Routes, Route } from 'react-router-dom';
 import env from "dotenv";
 import './App.css';
 import Airport from './components/Airport/Airport.tsx';
+import "./spinner.css";
 
-// TODO - Figure out a way to store this clientID in an env file
-        // The Way to complete this would be too store the API key in the backend server and make a request to grab that API key
-        // I would prefer if this is done, by passing some password in the headers than checking that in the backend server
-const clientId = "817352508433-svhmh1kd4bg80l1jb10g9kq91qkvslv6.apps.googleusercontent.com";
 
 function App() {
-  const [isLoggedIn, setLoginStatus] = useState(false);
-  const [userName, setUserName] = useState<any | null>(null);
-  const [userEmail, setUserEmail] = useState<any | null>(null);
-  const [userImageUrl, setUserImageUrl] = useState<any | null>(null);
-
-  const onLoginSuccess = (res) => {
-      if(res.profileObj) {
-          setLoginStatus(true);
-          setUserName(res.profileObj.name);
-          setUserEmail(res.profileObj.email);
-          setUserImageUrl(res.profileObj.imageUrl);
-      } else { setLoginStatus(false); }
-  };
   
-  const onLoginFailure = (res) => {
-      console.log(res);
-  };
-
-  const { signIn, loaded } = useGoogleLogin({
-      onSuccess: onLoginSuccess,
-      onFailure: onLoginFailure,
-      isSignedIn: true,
-      clientId: clientId
-  });
 
   return (
       <Routes>
             <>
-                <Route path="/" element={<Home isSignedIn={isLoggedIn}/>} />
-                <Route path="/user" element={<User isSignedIn={isLoggedIn} fullName={userName} email={userEmail} imageUrl={userImageUrl} />} />
+                <Route path="/" element={<Home />} />
+                <Route path="/user" element={<User />} />
                 <Route path="/login" element={<Login />} />
-                <Route path="/metar/:airport" element={<Metar isSignedIn={isLoggedIn} />} />
-                <Route path="/:airport" element={<Airport isSignedIn={isLoggedIn} />} />
+                <Route path="/metar/:airport" element={<Metar />} />
+                <Route path="/:airport" element={<Airport />} />
             </>
       </Routes>
   );

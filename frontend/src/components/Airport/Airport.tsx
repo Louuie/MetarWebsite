@@ -3,7 +3,6 @@ import GoogleMapReact from 'google-map-react';
 import axios from 'axios';
 import lodash from 'lodash';
 import { useParams, Link, Navigate } from 'react-router-dom';
-import "../../spinner.css";
 
 function Airport(props) {
     let params = useParams();
