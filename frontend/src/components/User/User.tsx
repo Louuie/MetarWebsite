@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Navigate, Link } from "react-router-dom";
+import { Navigate, Link } from "react-router-dom";                  
 import lodash from "lodash";
 
 
@@ -24,7 +24,7 @@ function User() {
             function() {
                 setLoadingStatus(false);
             }, 1400)
-    });
+    });                     
 
     return (
     <div>
