@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
+import { firebaseAuth } from "../../firebase";
 import { GoogleAuthProvider, signInWithPopup, getAuth } from 'firebase/auth';
-import { auth, detectTokenRevocation } from '../../firebase';
 import axios from "axios";
 
 const provider = new GoogleAuthProvider();
@@ -11,9 +11,9 @@ function Login() {
     };
 
     const firebaseGoogleAuthentication = () => {
-        signInWithPopup(auth, provider).then((res) => {
+        signInWithPopup(firebaseAuth, provider).then((res) => {
             const credential = GoogleAuthProvider.credentialFromResult(res);
-            detectTokenRevocation(credential.idToken);
+            console.log(res);
         }).catch((err) => { console.log(err); })     
     };
 

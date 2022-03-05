@@ -2,11 +2,8 @@ const express = require('express');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const app = express();
-const options = {
-    origin: "http://localhost:3000",
-    credentials: true,
-}
-app.use(cors(options));
+
+app.use(cors());
 app.use(cookieParser());
 const metarRouter = require('./routes/metar');
 const authRouter = require('./routes/auth');

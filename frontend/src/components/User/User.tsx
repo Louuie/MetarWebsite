@@ -1,53 +1,48 @@
 import React, { useEffect, useState } from "react";
+import { firebaseAuth } from "../../firebase";
+import { onAuthStateChanged, GoogleAuthProvider } from "firebase/auth";
 import axios from "axios";
-import { Navigate, Link } from "react-router-dom";                  
-import lodash from "lodash";
+import { Navigate, Link } from "react-router-dom";
+import '../Login/Login';                  
+import Login from "../Login/Login";
 
 
-function User() {
-    let [isLoading, setLoadingStatus] = useState(true); 
-    let [firstName, setFirstName] = useState(null);
-    let [lastName, setLastName] = useState(null);
+function User({token}) {
+    let [fullName, setFullName] = useState(null);
     let [email, setEmail] = useState(null);
     let [profile_picture, set_profile_picture] = useState(null);
-    let [errorCodeStatus, setErrorCodeStatus] = useState(null);
 
+    
+    
     useEffect(() => {
-        axios.get("http://localhost:4000/auth/user/information", {withCredentials: true}).then((res) => {
-            if(res.data.name === undefined) setErrorCodeStatus(true); else  setErrorCodeStatus(false); 
-            setFirstName(res.data.name.familyName);
-            setLastName(res.data.name.givenName);
-            setEmail(res.data.emails.main);
-            set_profile_picture(res.data.profile_picture.value);
-        }).catch((err) => { console.log(err) })
-        setTimeout(
-            function() {
-                setLoadingStatus(false);
-            }, 1400)
-    });                     
+        let unmounted = false;
+        onAuthStateChanged(firebaseAuth, (user) => {
+            if(!unmounted && user) {
+                                user.getIdToken().then((token) => {
+                    axios.get('http://localhost:4000/auth/user/information', {
+                        headers: {
+                            Authorization: 'Bearer ' + token
+                        }
+                    }).then((res) => {
+                        if(res.data == undefined) <Login/>
+                        setFullName(res.data.fullName);
+                        setEmail(res.data.email);
+                        set_profile_picture(res.data.profile_picture);
+                    }).catch((err) => console.log(err));
+                });
+            }
+        })
+        return () => {unmounted = true};
+    });
+
+
 
     return (
-    <div>
-        {isLoading ? (
-                <div className="lds-ring">
-                <div></div><div></div><div></div><div></div>
-                </div>
-        ) : (
             <div>
-                {errorCodeStatus ? (
-                    <div>
-                        <Link to="/login">Login in Please</Link>
-                    </div>
-                ) : (
-                    <div>
-                    <img src={profile_picture} alt={firstName} />
-                    <h1>{firstName} {lastName}</h1>
-                    <h1>{email}</h1>
-                    </div>
-                )}
+                <img src={profile_picture} alt={fullName} />
+                <h1>{fullName}</h1>
+                <h1>{email}</h1>
             </div>
-        )}
-    </div>
     );
 }
 

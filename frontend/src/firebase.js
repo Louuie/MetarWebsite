@@ -16,18 +16,7 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
-export const auth = getAuth(app);
-
-export const detectTokenRevocation = (token) => {
-  let checkRevoked = true;
-  auth.verifyIdToken(token, checkRevoked).then((payload) => {
-    console.log("Valid Token");
-  }).catch((err) => { 
-    if(err.code === 'auth/id-token-revoked') {
-      console.log("Token has been revoked, please reauthenticate!");
-    } else { console.log("Token is invalid!") }
-   })
-};
+export const firebaseAuth = getAuth(app);
 
 
 
